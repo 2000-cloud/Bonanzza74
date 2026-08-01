@@ -7,13 +7,21 @@
     <style>
       body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #f3f4f6; }
       .wrap { padding: 24px; }
-      .hint { margin-top: 16px; color: #374151; font-size: 14px; }
+      .toolbar { margin-bottom: 18px; }
+      .copy-button { padding: 10px 16px; border: 0; border-radius: 6px; background: #c56a22; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; }
+      .copy-button:focus { outline: 3px solid #f5cda8; outline-offset: 2px; }
+      .status { margin-left: 10px; color: #166534; font-size: 14px; }
+      .hint { margin-top: 16px; color: #374151; font-size: 14px; line-height: 1.5; }
     </style>
   </head>
   <body>
     <div class="wrap">
+      <div class="toolbar">
+        <button class="copy-button" id="copy-signature" type="button">Kopiuj stopkę do Gmaila</button>
+        <span class="status" id="copy-status" role="status" aria-live="polite"></span>
+      </div>
       <!-- Wklejka 1:1 do Gmaila zaczyna się poniżej -->
-      <table cellpadding="0" cellspacing="0" border="0" style="width:760px; max-width:100%; background:#efede4; font-family:Arial,Helvetica,sans-serif; color:#1f2433;">
+      <table id="email-signature" cellpadding="0" cellspacing="0" border="0" style="width:760px; max-width:100%; background:#efede4; font-family:Arial,Helvetica,sans-serif; color:#1f2433;">
         <tr>
           <td style="padding:28px 24px; width:260px; vertical-align:top;">
             <img src="https://www.trimnj.com/signature/fabian-photo.png" alt="Fabian" width="220" style="display:block; width:220px; height:220px; border-radius:50%; border:6px solid #111827; outline:6px solid #b8bbc2; object-fit:cover;" />
@@ -36,7 +44,24 @@
       </table>
       <!-- Wklejka 1:1 do Gmaila kończy się powyżej -->
 
-      <p class="hint">Podgląd lokalny: otwórz ten plik w przeglądarce. Do Gmaila kopiuj tylko zawartość tabeli (bez tej strony pomocniczej).</p>
+      <p class="hint"><strong>Jak wstawić:</strong> kliknij „Kopiuj stopkę do Gmaila”, a następnie w Gmailu otwórz Ustawienia → Zobacz wszystkie ustawienia → Ogólne → Podpis, utwórz nowy podpis i wklej go skrótem Ctrl+V (Windows) lub ⌘V (Mac).</p>
     </div>
+    <script>
+      document.getElementById("copy-signature").addEventListener("click", () => {
+        const signature = document.getElementById("email-signature");
+        const selection = window.getSelection();
+        const range = document.createRange();
+
+        range.selectNode(signature);
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        const copied = document.execCommand("copy");
+        selection.removeAllRanges();
+        document.getElementById("copy-status").textContent = copied
+          ? "Skopiowano — teraz wklej w ustawieniach podpisu Gmaila."
+          : "Nie udało się skopiować. Zaznacz stopkę ręcznie i naciśnij Ctrl+C.";
+      });
+    </script>
   </body>
 </html>
